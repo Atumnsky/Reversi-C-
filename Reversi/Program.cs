@@ -9,7 +9,8 @@ namespace Reversi
         public static int Wwidth = 800;
         public static int Wheight = 800;
 
-        // Board size.
+        // Board.
+        // Board size is dependent on the Window size
         public static int cells = 6;
         public static int thickness = 5;
 
@@ -33,54 +34,41 @@ namespace Reversi
         public static int b = 0;
     }
 
-
-    public class Window : Form
+    public class Window : Form //Window inherit from Form class
     {
+        UI ui;
+        GameState game;
+
         Point labelLocation;
         Label label;
         Label background;
-
-        Font Arial = new Font("Arial Black", 10, FontStyle.Regular);
-        Button newGame;
-        ComboBox Field;
 
         public Window()
         {
             ClientSize = new Size(Settings.Wwidth, Settings.Wheight);
             Text = "Reversi C#";
 
+            ui = new UI(new Font("Arial Black", 10), new Point(100, Settings.Uheight - 130));
+
+            Controls.Add(ui.NewGameButton);
+            Controls.Add(ui.FieldSizeBox);
+
+            ui.FieldSizeBox.SelectedItem = "6x6";
+
+            ui.NewGameClicked += StartNewGame;
+            ui.FieldSizeChanged += ChangeFieldSize;
+
             labelLocation = new Point((Settings.Wwidth/2)-((Settings.Wheight-Settings.Uheight)/2), Settings.Uheight);
 
-            ////////////////////////// UI controls
-            //New Game
-            newGame = new Button();
-            newGame.Location = new Point(labelLocation.X, Settings.Uheight-130);
-            newGame.Text = "New Game";
-            newGame.Font = Arial;
-            newGame.Size = new Size(100, 30);
-            Controls.Add(newGame);
-
-            // Field Size
-            Field = new ComboBox();
-            Field.Location = new Point(labelLocation.X + 120, Settings.Uheight - 128);
-            Field.Text = "Field Size";
-            Field.Font = Arial;
-            Field.Items.Add("4x4");
-            Field.Items.Add("6x6");
-            Field.Items.Add("8x8");
-            Field.Items.Add("10x10");
-            Controls.Add(Field);
-
-            //
-
-            ///////////////////////////////
             // Reversi board
             label = new Label();
             label.Location = labelLocation;
-            label.Size = new Size(Settings.Wheight-Settings.Uheight, Settings.Wheight-Settings.Uheight);
+            label.Size = new Size(Settings.Wheight-Settings.Uheight, Settings.Wheight-Settings.Uheight); 
             label.BackColor = Color.FromArgb(Settings.R,Settings.G, Settings.B);
             Controls.Add(label);
-            label.Image = Board.Rboard(label.ClientSize);
+            label.Image = Board.Rboard(label.ClientSize, null);
+
+            label.MouseClick += BoardClicked;
 
             // Window background
             background = new Label();
@@ -89,15 +77,51 @@ namespace Reversi
             Controls.Add(background);
 
         }
-        public void FieldSize()
-        {
-            if (Field.SelectedIndex > -1)
-            {
-                Settings.cells = 8;
-                Invalidate();
-            }
-        }
 
+        void StartNewGame(object sender, EventArgs e)
+        {
+            game = new GameState(Settings.cells);
+            RedrawBoard();
+        }
+        void ChangeFieldSize(object sender, EventArgs e)
+        {
+            //Parse the number from the Box for FieldSize
+            string text = ui.FieldSizeBox.SelectedItem.ToString();
+            Settings.cells = int.Parse(text.Split('x')[0]);
+        }
+        void BoardClicked(object sender, MouseEventArgs m)
+        {
+            if (game == null) return;
+
+            //Scaling the game into a small grid
+            int cellSize = label.Width / game.Size;
+
+            //Scaling the mouse to the small grid
+            int col = m.X / cellSize;
+            int row = m.Y / cellSize;
+
+            //Return if the mouse is not inside the board
+            if (col < 0 || col >= game.Size) return;
+            if (row < 0 || row >= game.Size) return;
+
+            if (game.Board[row,col] == 0)
+            {
+                game.Board[row, col] = game.CurrentPlayer;
+                game.CurrentPlayer++;
+                if (game.CurrentPlayer > 2)
+                    game.CurrentPlayer = 1;
+                RedrawBoard();
+            }
+            
+        }
+        void RedrawBoard()
+        {
+            if (game == null)
+                label.Image = Board.Rboard(label.ClientSize, null);
+            else
+                label.Image = Board.Rboard(label.ClientSize, game);
+        }
+        
         // Resize logic
         protected override void OnResize(EventArgs e)
         {
@@ -107,33 +131,35 @@ namespace Reversi
                 label.Location = new Point((ClientSize.Width - (ClientSize.Height-Settings.Uheight)) / 2, Settings.Uheight);
                 label.Size = new Size(ClientSize.Height-Settings.Uheight,ClientSize.Height-Settings.Uheight);
 
-                newGame.Location = new Point((ClientSize.Width - (ClientSize.Height - Settings.Uheight)) / 2, Settings.Uheight - 130);
-                Field.Location = new Point(((ClientSize.Width - (ClientSize.Height - Settings.Uheight)) / 2)+120, Settings.Uheight - 128);
+                ui.NewGameButton.Location = new Point((ClientSize.Width - (ClientSize.Height - Settings.Uheight)) / 2, Settings.Uheight - 130);
+                ui.FieldSizeBox.Location = new Point(((ClientSize.Width - (ClientSize.Height - Settings.Uheight)) / 2)+120, Settings.Uheight - 128);
 
                 if (ClientSize.Width < ClientSize.Height - Settings.Uheight)
                 {
                     label.Size = new Size(ClientSize.Width, ClientSize.Width);
                     label.Location = new Point((ClientSize.Width-label.Width)/2,Settings.Uheight);
 
-                    newGame.Location = new Point((ClientSize.Width - label.Width) / 2, Settings.Uheight - 130);
-                    Field.Location = new Point(((ClientSize.Width - label.Width) / 2)+120, Settings.Uheight - 128);
+                    ui.NewGameButton.Location = new Point((ClientSize.Width - label.Width) / 2, Settings.Uheight - 130);
+                    ui.FieldSizeBox.Location = new Point(((ClientSize.Width - label.Width) / 2)+120, Settings.Uheight - 128);
                 }
 
-                label.Image = Board.Rboard(label.ClientSize);
+                label.Image = Board.Rboard(label.ClientSize, game);
             }
             base.OnResize(e);
         }
     }
 
-    // zonder variabelen static maken
+    // Board draws everything
     public class Board
     {
-        public static Bitmap Rboard(Size Bsize)
+        public static Bitmap Rboard(Size Bsize, GameState game)
         {
             Bitmap bitmap = new Bitmap(Bsize.Width,Bsize.Height);
             Graphics gr = Graphics.FromImage(bitmap);
 
             DrawLines(gr);
+            if (game!=null)
+                DrawPieces(gr,game,Bsize);
         
             void DrawLines(Graphics gr)
             {
@@ -158,45 +184,132 @@ namespace Reversi
                 gr.DrawLine(linesColor, Settings.thickness / 3, 0, Settings.thickness / 3, Bsize.Height);
                 gr.DrawLine(linesColor, Bsize.Width - Settings.thickness / 2, 0, Bsize.Height - Settings.thickness / 2, Bsize.Height);
                 gr.DrawLine(linesColor, 0, Bsize.Height - Settings.thickness / 2, Bsize.Width - Settings.thickness / 2, Bsize.Height - Settings.thickness / 2);
-
-                //gr.FillEllipse(blackP, (Bsize.Width / 2)+5, (Bsize.Height / 2)+5, r, r);
-            
             }
 
+            void DrawPieces(Graphics gr, GameState game, Size Bsize)
+            {
+                Brush W = new SolidBrush(Color.White);
+                Brush B = new SolidBrush(Color.Black);
+
+                //Scaling the game into a "small grid"
+                int cellSize = Bsize.Width/game.Size;
+                int x;
+                int y;
+
+                //Loop through the board and draw the pieces
+                for (int row = 0; row < Settings.cells; row++)
+                {
+                    for (int col = 0; col < Settings.cells; col++)
+                    {
+                        int value = game.Board[row, col];
+                        if (game.Board[row,col]!=0)
+                        {
+                            x = col * cellSize + ((cellSize * 6) / 100);
+                            y = row * cellSize + ((cellSize * 6) / 100);
+                            
+                            if (value ==1)
+                                gr.FillEllipse(W, x, y, (cellSize*90)/100, (cellSize * 90) / 100);
+                            else if (value ==2)
+                                gr.FillEllipse(B, x, y, (cellSize * 90) / 100, (cellSize * 90) / 100);
+
+                        }
+                    }
+                }
+            }
             return bitmap;
         }
     }
 
     public class UI
     {
-        public static void StartGame(object sender, EventArgs ea)
+        public Button NewGameButton;
+        public ComboBox FieldSizeBox;
+
+        public EventHandler NewGameClicked;
+        public EventHandler FieldSizeChanged;
+
+        Point mouse;
+        public UI(Font font, Point UILocation)
         {
-            //Board.Rboard();
+            NewGameButton = new Button();
+            NewGameButton.Text = "New Game";
+            NewGameButton.Size = new Size(100, 30);
+            NewGameButton.Location = UILocation;
+            NewGameButton.Font = font;
+
+            NewGameButton.Click += OnNewGameClicked;
+
+            FieldSizeBox = new ComboBox();
+            FieldSizeBox.Location = new Point(UILocation.X + 120, UILocation.Y + 2);
+            FieldSizeBox.Font = font;
+
+            FieldSizeBox.Items.Add("4x4");
+            FieldSizeBox.Items.Add("6x6");
+            FieldSizeBox.Items.Add("8x8");
+            FieldSizeBox.Items.Add("10x10");
+
+            FieldSizeBox.SelectedIndexChanged += OnFieldSizeChanged;
+
+            void OnNewGameClicked(object sender, EventArgs e)
+            {
+                if (NewGameClicked != null)
+                    NewGameClicked(sender, e);
+            }
+
+            void OnFieldSizeChanged(object sender, EventArgs e)
+            {
+                if(FieldSizeChanged != null)
+                    FieldSizeChanged(sender, e);
+            }
+
         }
     }
 
-    class Pieces
+    public class GameState
     {
-        public void DrawP(object s, PaintEventArgs pea, int x, int y)
+        //Empty = 0
+        //White = 1
+        //Black = 2
+
+        public int Size;
+
+        // Makes the 2D array(board). One cell =  Board[row,column]
+        public int [,] Board;
+
+        public int CurrentPlayer;
+
+        public GameState(int size)
         {
-            Size cell_Size = new Size(Settings.Wheight - Settings.Uheight, Settings.Wheight - Settings.Uheight);
-            int r = cell_Size.Width - 10;
+            //Creates the board according to the selected Board Size
+            Size = size;
+            Board = new int[Size, Size]; //new int values starts as 0
 
-            Brush blackP = new SolidBrush(Color.Black);
-            Brush whiteP = new SolidBrush(Color.White);
-
-            Graphics g = pea.Graphics;
-
-            g.FillEllipse(whiteP, x/2, y/2, r, r);
+            //Random player on start
+            Random rnd = new Random();
+            CurrentPlayer = rnd.Next(1,3);
+            InitBoard();
         }
-    }
-
-    class Game_logic
-    { 
         
+        void InitBoard() //Starting position of the game
+        {
+            int middle = Size / 2;
+
+            //White
+            Board[middle - 1, middle - 1] = 1;
+            Board[middle, middle] = 1;
+
+            //Black
+            Board[middle - 1, middle] = 2;
+            Board[middle, middle - 1] = 2;
+        }
+
+    }
+    public class Game_rules
+    { 
+      
     }
 
-    class Program
+    public class Program
     {
         static void Main()
         {

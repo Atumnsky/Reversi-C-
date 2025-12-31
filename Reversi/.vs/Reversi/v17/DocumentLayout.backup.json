@@ -5,6 +5,9 @@
     {
       "AbsoluteMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|c:\\users\\he\\documents\\github\\reversi-c-\\reversi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\He\\Desktop\\ModProg opdracht\\CS\\Stralen C#\\Stralen C#.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,11 +33,45 @@
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\Program.cs*",
-              "RelativeToolTip": "Program.cs*",
-              "ViewState": "AgIAADYAAAAAAAAAAAAYwE0AAAA1AAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAJoAAAAAAAAAAAAgwKMAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-16T14:28:52.497Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "FloatingWindowState": {
+        "Id": "8d25d6c5-2c2e-4b4b-a42a-95c60fe336c1",
+        "Display": 1,
+        "X": -6,
+        "Y": 199,
+        "Width": 1177,
+        "Height": 679,
+        "WindowState": 0
+      },
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Stralen C#.cs",
+              "DocumentMoniker": "C:\\Users\\He\\Desktop\\ModProg opdracht\\CS\\Stralen C#\\Stralen C#.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Desktop\\ModProg opdracht\\CS\\Stralen C#\\Stralen C#.cs",
+              "ToolTip": "C:\\Users\\He\\Desktop\\ModProg opdracht\\CS\\Stralen C#\\Stralen C#.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\Desktop\\ModProg opdracht\\CS\\Stralen C#\\Stralen C#.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAABYAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-30T23:21:27.741Z",
               "EditorCaption": ""
             }
           ]
