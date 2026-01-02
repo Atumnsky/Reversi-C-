@@ -39,6 +39,7 @@ namespace Reversi
         UI ui;
         GameState game;
 
+
         Point labelLocation;
         Label label;
         Label background;
@@ -104,12 +105,19 @@ namespace Reversi
             if (col < 0 || col >= game.Size) return;
             if (row < 0 || row >= game.Size) return;
 
-            if (game.Board[row,col] == 0)
+            if (Game_rules.IsValidMove(game, row, col))
             {
+                //The clicked cell gets the CurrentPlayer number
                 game.Board[row, col] = game.CurrentPlayer;
+
+                //CALL FLIP FUNCTION???
+                Game_rules.FlipPieces(game, row, col);
+
+                //CurrentPlayer swtiched after click
                 game.CurrentPlayer++;
                 if (game.CurrentPlayer > 2)
                     game.CurrentPlayer = 1;
+
                 RedrawBoard();
             }
             
@@ -158,8 +166,11 @@ namespace Reversi
             Graphics gr = Graphics.FromImage(bitmap);
 
             DrawLines(gr);
-            if (game!=null)
-                DrawPieces(gr,game,Bsize);
+            if (game != null)
+            {
+                DrawPieces(gr, game, Bsize);
+                DrawHint(gr, game, Bsize);
+            }
         
             void DrawLines(Graphics gr)
             {
@@ -197,9 +208,9 @@ namespace Reversi
                 int y;
 
                 //Loop through the board and draw the pieces
-                for (int row = 0; row < Settings.cells; row++)
+                for (int row = 0; row < game.Size; row++)
                 {
-                    for (int col = 0; col < Settings.cells; col++)
+                    for (int col = 0; col < game.Size; col++)
                     {
                         int value = game.Board[row, col];
                         if (game.Board[row,col]!=0)
@@ -213,6 +224,33 @@ namespace Reversi
                                 gr.FillEllipse(B, x, y, (cellSize * 90) / 100, (cellSize * 90) / 100);
 
                         }
+                    }
+                }
+            }
+
+            void DrawHint(Graphics gr, GameState game, Size Bsize)
+            {
+                Brush hint = new SolidBrush(Color.FromArgb(128, 128, 128, 128));
+
+                int cellSize = Bsize.Width/game.Size;
+                int x;
+                int y;
+
+                for (int row = 0; row < game.Size; row++)
+                {
+                    for (int col = 0; col < game.Size; col++)
+                    {
+                        if (game.Board[row, col] != 0)
+                            continue;
+
+                        if (!Game_rules.IsValidMove(game, row, col))
+                            continue;
+
+                        x = col * cellSize + ((cellSize * 6) / 100);
+                        y = row * cellSize + ((cellSize * 6) / 100);
+
+                        gr.FillEllipse(hint, x, y, (cellSize * 90) / 100, (cellSize * 90) / 100);
+
                     }
                 }
             }
@@ -305,8 +343,125 @@ namespace Reversi
 
     }
     public class Game_rules
-    { 
-      
+    {
+        public static bool IsValidMove( GameState game, int row, int col)
+        {
+            //Cannot play in a cell that not empty
+            if (game.Board[row, col] != 0)
+                return false;
+
+            //Create opponent
+            int opponent;
+            if (game.CurrentPlayer == 1)
+                opponent = 2;
+            else
+                opponent = 1;
+
+            //Check 8 directions of a piece
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    if (dx == 0 && dy == 0)
+                        continue;
+
+                    //A direction is invalid if:
+                    int x = col + dx;
+                    int y = row + dy;
+
+                    //its outside the board
+                    if (x < 0 || x >= game.Size || y < 0 || y >= game.Size) 
+                        continue;
+
+                    //its your own piece or 0
+                    if (game.Board[y, x] != opponent)
+                        continue;
+
+                    //Check if we can sandwitch the opponent
+                    while (true)
+                    {
+                        x += dx;
+                        y += dy;
+
+                        //Stop if its outside the board
+                        if (x < 0 || x >= game.Size || y < 0 || y >= game.Size)
+                            break;
+
+                        //Stop if we encounter a empty piece
+                        if (game.Board[y, x] == 0)
+                            break;
+
+                        //Valid if we encouter own piece again
+                        if (game.Board[y, x] == game.CurrentPlayer)
+                            return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public static void FlipPieces(GameState game, int row, int col)
+        {
+            //Create opponent
+            int opponent;
+            if (game.CurrentPlayer == 1)
+                opponent = 2;
+            else
+                opponent = 1;
+
+            //Check 8 directions of the placed piece
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    if (dx == 0 && dy == 0)
+                        continue;
+
+                    int x = col + dx;
+                    int y = row + dy;
+                    //A direction is invalid if:
+                    //its outside the board
+                    if (x < 0 || x >= game.Size || y < 0 || y >= game.Size)
+                        continue;
+                    //its your own piece or 0
+                    if (game.Board[y, x] != opponent)
+                        continue;
+
+                    int nextX = x;
+;                   int nextY = y;
+
+                    while (true)
+                    {
+                        nextX += dx;
+                        nextY += dy;
+
+                        //Continue if the direction outside the board
+                        if (nextX < 0 || nextX >= game.Size || nextY < 0 || nextY >= game.Size)
+                            break;
+
+                        //Continue if we encounter a empty piece
+                        if (game.Board[nextY, nextX] == 0)
+                            break;
+
+                        //Flip pieces between
+                        if (game.Board[nextY, nextX] == game.CurrentPlayer)
+                        {
+                            int flipX = x;
+                            int flipY = y;
+
+                            while (flipX != nextX || flipY != nextY)
+                            {
+                                game.Board[flipY, flipX] = game.CurrentPlayer;
+                                flipX += dx;
+                                flipY += dy;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public class Program
@@ -318,5 +473,4 @@ namespace Reversi
         }
 
     }
-    
 }
