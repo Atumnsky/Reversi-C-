@@ -1,6 +1,4 @@
-
 using System.Diagnostics;
-using System.Xml.Schema;
 
 namespace Reversi
 {
@@ -81,6 +79,7 @@ namespace Reversi
             ui.ColorChanged += ChangeColor;
             ui.HintClicked += HintON;
             ui.AIClicked += VSAIOn;
+            ui.HelpClicked += ShowHelp;
 
             CenterUI();
 
@@ -178,6 +177,10 @@ namespace Reversi
             if (Settings.VSAI && game.CurrentPlayer == 2)
                 AIMove();
         }
+        void ShowHelp(object sender, EventArgs e)
+        {
+            Process.Start(new ProcessStartInfo{ FileName = "https://bitflap.app/vspocket/articles/reversi-rules-complete-guide/", UseShellExecute = true});
+        }
         void HintON(object sender, EventArgs e)
         {
             Settings.ShowHint = !Settings.ShowHint;
@@ -264,6 +267,8 @@ namespace Reversi
 
                 Settings.White = new SolidBrush(Color.White);
                 Settings.Black = new SolidBrush(Color.Black);
+
+                ui.HelpButton.ForeColor = Color.White;
             }
             else if (text == "Red VS Blue")
             {
@@ -279,6 +284,7 @@ namespace Reversi
                 Settings.Black = new SolidBrush(Color.Red);
 
                 Settings.hint = new SolidBrush(Color.FromArgb(180, 180, 180));
+                ui.HelpButton.ForeColor = Color.Blue;
             }
             else if (text == "Wood")
             {
@@ -292,8 +298,11 @@ namespace Reversi
 
                 Settings.White = new SolidBrush(Color.FromArgb(238,213,174));
                 Settings.Black = new SolidBrush(Color.FromArgb(76,43,32));
+
+                ui.HelpButton.ForeColor = Color.FromArgb(248, 223, 184);
             }
 
+            ui.HelpButton.BackColor = Color.FromArgb(Settings.Br, Settings.Bg, Settings.Bb);
             background.BackColor = Color.FromArgb(Settings.Br, Settings.Bg, Settings.Bb);
             label.BackColor = Color.FromArgb(Settings.R, Settings.G, Settings.B);
             RedrawBoard();
@@ -392,6 +401,7 @@ namespace Reversi
 
                 ui.PPanel.Size = ClientSize;
                 ui.PPanel.Invalidate();
+                ui.HelpButton.Location = new Point(ClientSize.Width - 110, ClientSize.Height - 40);
 
                 if (label.Location.X < ((ClientSize.Width / 7) - 100)/2 + r+20)
                 {
@@ -522,6 +532,7 @@ namespace Reversi
         public Button NewGameButton;
         public Button HintButton;
         public Button VSAIButton;
+        public Button HelpButton;
         public ComboBox FieldSizeBox;
         public ComboBox ColorBox;
 
@@ -530,6 +541,7 @@ namespace Reversi
         public EventHandler ColorChanged;
         public EventHandler HintClicked;
         public EventHandler AIClicked;
+        public EventHandler HelpClicked;
 
         Point mouse;
         public bool HintOn = false;
@@ -567,6 +579,16 @@ namespace Reversi
             HintButton.Location = new Point(VSAIButton.Location.X + VSAIButton.Width + space, 0);
 
             HintButton.Click += OnHintClicked;
+
+            HelpButton = new Button();
+            HelpButton.Text = "Help";
+            HelpButton.Font = font1;
+            HelpButton.Size = new Size(100,30);
+            HelpButton.FlatStyle = FlatStyle.Flat;
+            HelpButton.FlatAppearance.BorderSize = 0;
+            HelpButton.Location = new Point(PPanel.Size.Width - 110, PPanel.Size.Height - 40);
+
+            HelpButton.Click += OnHelpClicked;
 
             FieldSizeBox = new ComboBox();
             FieldSizeBox.Location = new Point(HintButton.Location.X + HintButton.Width + space,0);
@@ -626,6 +648,13 @@ namespace Reversi
             UIPanel.Controls.Add(HintButton);
             UIPanel.Controls.Add(VSAIButton);
 
+            PPanel.Controls.Add(HelpButton);
+
+            void OnHelpClicked (object sender, EventArgs e)
+            {
+                if (HelpClicked != null)
+                    HelpClicked(sender, e);
+            }
 
             void OnNewGameClicked(object sender, EventArgs e)
             {
