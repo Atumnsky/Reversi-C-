@@ -36,13 +36,25 @@ namespace Reversi
         public static int b = 0;
 
         //Piece color
+        public static int circleThick = 10;
+
         public static Brush White = new SolidBrush(Color.White);
         public static Brush Black = new SolidBrush(Color.Black);
+
+        public static Pen Wcircle = new Pen(Color.White, circleThick);
+        public static Pen Bcircle = new Pen(Color.Black, circleThick);
 
         public static Brush hint = new SolidBrush(Color.FromArgb(128, 128, 128, 128));
         public static bool ShowHint = false;
 
         public static bool VSAI = false;
+
+        //AI weight
+        public static int Weight1;
+        public static int Weight2;
+        public static int Weight3;
+        public static int Weight4;
+        public static int Weight5;
     }
 
     public class Window : Form //Window inherit from Form class
@@ -72,6 +84,7 @@ namespace Reversi
 
             ui.FieldSizeBox.SelectedItem = "6x6";
             ui.ColorBox.SelectedItem = "Classic Board";
+            ui.DifficultyBox.SelectedItem = "Easy";
             
 
             ui.NewGameClicked += StartNewGame;
@@ -80,6 +93,8 @@ namespace Reversi
             ui.HintClicked += HintON;
             ui.AIClicked += VSAIOn;
             ui.HelpClicked += ShowHelp;
+            ui.DifficultyChanged += ChangeDifficulty;
+            ChangeDifficulty(null, EventArgs.Empty);
 
             CenterUI();
 
@@ -155,6 +170,17 @@ namespace Reversi
 
             g.DrawString(textW, Arial, Settings.Black, textWX, textWY);
             g.DrawString(textB, Arial, Settings.White, textBX, textBY);
+
+            if (game!=null)
+            {
+                int bigger = 25;
+                int R = r + bigger;
+
+                if (game.CurrentPlayer == 1)
+                    g.DrawEllipse(Settings.Wcircle, leftX-bigger/2, centerY-bigger/2, R, R);
+                else if (game.CurrentPlayer == 2)
+                    g.DrawEllipse(Settings.Bcircle, rightX-bigger/2, centerY-bigger/2, R, R);
+            }
         }
 
         void DrawP(object s, PaintEventArgs pea)
@@ -171,6 +197,12 @@ namespace Reversi
         }
         void StartNewGame(object sender, EventArgs e)
         {
+            if (game != null)
+            {
+                game = null;
+                ChangeFieldSize(null, new EventArgs());
+            }
+
             game = new GameState(Settings.cells);
             ui.PPanel.Invalidate();
             RedrawBoard();
@@ -189,36 +221,62 @@ namespace Reversi
         void VSAIOn(object sender, EventArgs e)
         {
             Settings.VSAI = ui.VSAIOn;
+            if (game != null && game.CurrentPlayer == 2)
+                AIMove();
+        }
+        //AI Logics
+        // Apply weights to moves
+        int MoveWeight(int row, int col)
+        {
+            int end = game.Size - 1;
+
+            //Corner has max weight
+            if ((row == 0 && col == 0) || (row == 0 && col == end) || (row == end && col == 0) || (row == end && col == end))
+                return Settings.Weight1;
+            //Edges has 2nd most weight
+            else if (row == 0 || row == end || col == 0 || col == end)
+                return Settings.Weight2;
+            //Closer to edge has more weight
+            else if (row == 1 || row == end - 1 || col == 1 || col == end - 1)
+                return Settings.Weight3;
+            else if (row == 2 || row == end - 2 || col == 2 || col == end - 2)
+                return Settings.Weight4;
+            //Inner moves has the least weight
+            else
+                return Settings.Weight5;
         }
         async void AIMove()
         {
             if (game == null) 
                 return;
 
-            //Async used for simulating delay
+            //Async used for simulating response delay
             Random time = new Random();
-            int delay = time.Next(250, 1000);
+            int delay = time.Next(400, 1000);
             await Task.Delay(delay);
 
             if (game.CurrentPlayer != 2)
                 return;
 
-            //Count total legal moves
-            int legalMoves = 0;
+            //Sum up the weights, and pick a random number in the weights
+            //Count total weight
+            int totalWeight = 0;
             for (int row = 0; row < game.Size; row++)
             {
                 for (int col = 0; col < game.Size; col++)
                 {
-                    if (Game_rules.IsValidMove(game, row, col))
-                        legalMoves++;
+                    if (Game_rules.IsValidMove(game, row, col, 2))
+                        totalWeight += MoveWeight(row,col);
                 }
             }
 
-            if (legalMoves==0)
+            if (totalWeight == 0)
                 return;
+            
 
             Random rnd = new Random();
-            int Move = rnd.Next(legalMoves);
+            int Move = rnd.Next(totalWeight);
+            
 
             //AI play
             int i = 0;
@@ -226,27 +284,40 @@ namespace Reversi
             {
                 for (int col = 0;col < game.Size; col++)
                 {
-                    if (Game_rules.IsValidMove(game, row, col))
+                    if (Game_rules.IsValidMove(game, row, col, 2))
                     {
-                        if (i == Move)
+                        //If the number is less than the weight of lets say edge and greater than the weight of inner, it will pick the edge
+                        i += MoveWeight(row, col);
+
+                        if (Move < i)
                         {
                             game.Board[row, col] = 2;
                             Game_rules.FlipPieces(game, row, col);
+
+                            await Task.Delay(100);
 
                             game.CurrentPlayer = 1;
                             ui.PPanel.Invalidate();
                             RedrawBoard();
                             CheckGameEnd();
+
+                            if (!Game_rules.MovePossible(game, 1))
+                            {
+                                game.CurrentPlayer = 2;
+                                AIMove();
+                            }
+
                             return;
                         }
-                        i++;
                     }
                 }
             }
-
         }
+
         void ChangeFieldSize(object sender, EventArgs ea)
         {
+            if (game != null)
+                return;
             //Parse the number from the Box for FieldSize
             string text = ui.FieldSizeBox.SelectedItem.ToString();
             Settings.cells = int.Parse(text.Split('x')[0]);
@@ -268,6 +339,9 @@ namespace Reversi
                 Settings.White = new SolidBrush(Color.White);
                 Settings.Black = new SolidBrush(Color.Black);
 
+                Settings.Wcircle = new Pen(Color.White, Settings.circleThick);
+                Settings.Bcircle = new Pen(Color.Black, Settings.circleThick);
+
                 ui.HelpButton.ForeColor = Color.White;
             }
             else if (text == "Red VS Blue")
@@ -282,6 +356,9 @@ namespace Reversi
 
                 Settings.White = new SolidBrush(Color.Blue);
                 Settings.Black = new SolidBrush(Color.Red);
+
+                Settings.Wcircle = new Pen(Color.Blue, Settings.circleThick);
+                Settings.Bcircle = new Pen(Color.Red, Settings.circleThick);
 
                 Settings.hint = new SolidBrush(Color.FromArgb(180, 180, 180));
                 ui.HelpButton.ForeColor = Color.Blue;
@@ -299,6 +376,9 @@ namespace Reversi
                 Settings.White = new SolidBrush(Color.FromArgb(238,213,174));
                 Settings.Black = new SolidBrush(Color.FromArgb(76,43,32));
 
+                Settings.Wcircle = new Pen(Color.FromArgb(238, 213, 174), Settings.circleThick);
+                Settings.Bcircle = new Pen(Color.FromArgb(76, 43, 32), Settings.circleThick);
+
                 ui.HelpButton.ForeColor = Color.FromArgb(248, 223, 184);
             }
 
@@ -307,9 +387,42 @@ namespace Reversi
             label.BackColor = Color.FromArgb(Settings.R, Settings.G, Settings.B);
             RedrawBoard();
         }
+
+        void ChangeDifficulty(object sender, EventArgs e)
+        {
+            string text = ui.DifficultyBox.SelectedItem.ToString();
+
+            if (text == "Easy")
+            {
+                Settings.Weight1 = Settings.Weight2 + 2;
+                Settings.Weight2 = Settings.Weight3 + 1;
+                Settings.Weight3 = Settings.Weight4 + 1;
+                Settings.Weight4 = Settings.Weight5 + 1;
+                Settings.Weight5 = 5;
+            }
+
+            else if (text == "Medium")
+            {
+                Settings.Weight1 = Settings.Weight2 + 120;
+                Settings.Weight2 = Settings.Weight3 + 60;
+                Settings.Weight3 = Settings.Weight4 + 30;
+                Settings.Weight4 = Settings.Weight5 + 15;
+                Settings.Weight5 = 3;
+            }
+
+            else if (text == "Hard")
+            {
+                Settings.Weight1 = Settings.Weight2 + 200;
+                Settings.Weight2 = Settings.Weight3 + 100;
+                Settings.Weight3 = Settings.Weight4 + 40;
+                Settings.Weight4 = Settings.Weight5 + 20;
+                Settings.Weight5 = 1;
+            }
+        }
         void BoardClicked(object sender, MouseEventArgs m)
         {
             if (game == null) return;
+            if (ui.VSAIOn && game.CurrentPlayer == 2) return;
 
             //Scaling the game into a small grid
             int cellSize = label.Width / game.Size;
@@ -322,7 +435,7 @@ namespace Reversi
             if (col < 0 || col >= game.Size) return;
             if (row < 0 || row >= game.Size) return;
 
-            if (Game_rules.IsValidMove(game, row, col))
+            if (Game_rules.IsValidMove(game, row, col, game.CurrentPlayer))
             {
                 //The clicked cell gets the CurrentPlayer number
                 game.Board[row, col] = game.CurrentPlayer;
@@ -342,6 +455,7 @@ namespace Reversi
                     game.CurrentPlayer++;
                     if(game.CurrentPlayer > 2)
                         game.CurrentPlayer = 1;
+
                 }
 
                 if (Settings.VSAI && game.CurrentPlayer == 2)
@@ -352,7 +466,6 @@ namespace Reversi
             }
             
         }
-
         void CheckGameEnd()
         {
             if (game == null)
@@ -365,7 +478,7 @@ namespace Reversi
                 ShowWinner();
         }
 
-        void ShowWinner()
+        async void ShowWinner()
         {
             var scores = game.CountPoints();
 
@@ -378,6 +491,9 @@ namespace Reversi
                 message = $"It's a draw! \n\n White: {scores.WhiteP} \n Black: {scores.BlackP}";
 
             MessageBox.Show(message, "Game Over", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            await Task.Delay(100);
+            game = null;
         }
         void RedrawBoard()
         {
@@ -509,7 +625,7 @@ namespace Reversi
                         if (game.Board[row, col] != 0)
                             continue;
 
-                        if (!Game_rules.IsValidMove(game, row, col))
+                        if (!Game_rules.IsValidMove(game, row, col, game.CurrentPlayer))
                             continue;
 
                         x = col * cellSize + ((cellSize * 6) / 100);
@@ -535,6 +651,7 @@ namespace Reversi
         public Button HelpButton;
         public ComboBox FieldSizeBox;
         public ComboBox ColorBox;
+        public ComboBox DifficultyBox;
 
         public EventHandler NewGameClicked;
         public EventHandler FieldSizeChanged;
@@ -542,6 +659,7 @@ namespace Reversi
         public EventHandler HintClicked;
         public EventHandler AIClicked;
         public EventHandler HelpClicked;
+        public EventHandler DifficultyChanged;
 
         Point mouse;
         public bool HintOn = false;
@@ -565,15 +683,25 @@ namespace Reversi
             int space = NewGameButton.Size.Width / 4;
 
             VSAIButton = new Button();
-            VSAIButton.Text = "Fake AI";
+            VSAIButton.Text = "VS Robot";
             VSAIButton.Font = font1;
             VSAIButton.Size = NewGameButton.Size;
             VSAIButton.Location = new Point(NewGameButton.Location.X+NewGameButton.Width+space,0);
 
             VSAIButton.Click += ONAIClicked;
-            
+
+            DifficultyBox = new ComboBox();
+            DifficultyBox.Location = new Point(NewGameButton.Location.X + NewGameButton.Width + space, VSAIButton.Height+1);
+            DifficultyBox.Font = font2;
+
+            DifficultyBox.Items.Add("Easy");
+            DifficultyBox.Items.Add("Medium");
+            DifficultyBox.Items.Add("Hard");
+
+            DifficultyBox.SelectedIndexChanged += OnDifficultyChanged;
+
             HintButton = new Button();
-            HintButton.Text = "Moves Hint";
+            HintButton.Text = "Move Hints";
             HintButton.Font = font1;
             HintButton.Size = NewGameButton.Size;
             HintButton.Location = new Point(VSAIButton.Location.X + VSAIButton.Width + space, 0);
@@ -647,6 +775,7 @@ namespace Reversi
             UIPanel.Controls.Add(ColorBox);
             UIPanel.Controls.Add(HintButton);
             UIPanel.Controls.Add(VSAIButton);
+            UIPanel.Controls.Add(DifficultyBox);
 
             PPanel.Controls.Add(HelpButton);
 
@@ -666,6 +795,12 @@ namespace Reversi
             {
                 if(FieldSizeChanged != null)
                     FieldSizeChanged(sender, e);
+            }
+
+            void OnDifficultyChanged(object sender, EventArgs e)
+            {
+                if(DifficultyChanged != null)
+                    DifficultyChanged(sender, e);
             }
         }
     }
@@ -708,7 +843,7 @@ namespace Reversi
             Board[middle, middle - 1] = 2;
         }
 
-        // Tuple for returning 2 things
+        // Tuple for returning points of both Player
         public (int WhiteP, int BlackP) CountPoints()
         {
             int WhiteP = 0;
@@ -732,7 +867,7 @@ namespace Reversi
     }
     public class Game_rules
     {
-        public static bool IsValidMove( GameState game, int row, int col)
+        public static bool IsValidMove( GameState game, int row, int col, int player)
         {
             //Cannot play in a cell that not empty
             if (game.Board[row, col] != 0)
@@ -740,7 +875,7 @@ namespace Reversi
 
             //Create opponent
             int opponent;
-            if (game.CurrentPlayer == 1)
+            if (player == 1)
                 opponent = 2;
             else
                 opponent = 1;
@@ -861,7 +996,7 @@ namespace Reversi
             {
                 for (int col = 0; col < game.Size; col++)
                 {
-                    if (IsValidMove(game, row, col))
+                    if (IsValidMove(game, row, col, player))
                     {
                         //Switch the player back
                         game.CurrentPlayer = previousPlayer;
