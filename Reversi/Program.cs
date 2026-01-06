@@ -344,7 +344,7 @@ namespace Reversi
 
                 ui.HelpButton.ForeColor = Color.White;
             }
-            else if (text == "Red VS Blue")
+            else if (text == "Red & Blue")
             {
                 Settings.Br = 200;
                 Settings.Bg = 200;
@@ -482,13 +482,28 @@ namespace Reversi
         {
             var scores = game.CountPoints();
 
+            string text = ui.ColorBox.SelectedItem.ToString();
             string message;
+            string w = "White"; string b = "Black";
+
+            if (text == "Classic Board")
+                { w = "White"; b = "Black"; }
+
+            else if (text == "Red & Blue")
+                { w = "Blue"; b = "Red"; }
+
+            else if (text == "Wood")
+            { w = "Birch"; b = "Dark Oak"; }
+
+
             if (scores.WhiteP > scores.BlackP)
-                message = $"White wins!\n\n White: {scores.WhiteP} \n Black: {scores.BlackP}";
+                message = $"{w} wins!\n\n {w}: {scores.WhiteP} \n {b}: {scores.BlackP}";
+
             else if (scores.WhiteP < scores.BlackP)
-                message = $"Black wins! \n\n White: {scores.WhiteP} \n Black: {scores.BlackP}";
+                message = $"{b} wins! \n\n {w}: {scores.WhiteP} \n {b}: {scores.BlackP}";
+
             else
-                message = $"It's a draw! \n\n White: {scores.WhiteP} \n Black: {scores.BlackP}";
+                message = $"It's a draw! \n\n {w}: {scores.WhiteP} \n {b}: {scores.BlackP}";
 
             MessageBox.Show(message, "Game Over", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -734,7 +749,7 @@ namespace Reversi
             ColorBox.Font = font2;
 
             ColorBox.Items.Add("Classic Board");
-            ColorBox.Items.Add("Red VS Blue");
+            ColorBox.Items.Add("Red & Blue");
             ColorBox.Items.Add("Wood");
 
             ColorBox.SelectedIndexChanged += OnColorChanged;
