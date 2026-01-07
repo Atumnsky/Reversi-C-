@@ -254,7 +254,8 @@ namespace Reversi
             Random time = new Random();
             int delay = time.Next(400, 1000);
             await Task.Delay(delay);
-
+            if (game == null)
+                return;
             if (game.CurrentPlayer != 2)
                 return;
 
@@ -404,7 +405,7 @@ namespace Reversi
             else if (text == "Medium")
             {
                 Settings.Weight1 = Settings.Weight2 + 120;
-                Settings.Weight2 = Settings.Weight3 + 60;
+                Settings.Weight2 = Settings.Weight3 + 70;
                 Settings.Weight3 = Settings.Weight4 + 30;
                 Settings.Weight4 = Settings.Weight5 + 15;
                 Settings.Weight5 = 3;
@@ -413,7 +414,7 @@ namespace Reversi
             else if (text == "Hard")
             {
                 Settings.Weight1 = Settings.Weight2 + 200;
-                Settings.Weight2 = Settings.Weight3 + 100;
+                Settings.Weight2 = Settings.Weight3 + 150;
                 Settings.Weight3 = Settings.Weight4 + 40;
                 Settings.Weight4 = Settings.Weight5 + 20;
                 Settings.Weight5 = 1;
