@@ -7,20 +7,24 @@
       "RelativeMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|solutionrelative:settings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|c:\\users\\he\\documents\\github\\reversi-c-\\reversi\\reversi_ai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|solutionrelative:reversi_ai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|c:\\users\\he\\documents\\github\\reversi-c-\\reversi\\window.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|solutionrelative:window.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|c:\\users\\he\\documents\\github\\reversi-c-\\reversi\\gamestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|solutionrelative:gamestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|c:\\users\\he\\documents\\github\\reversi-c-\\reversi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|c:\\users\\he\\documents\\github\\reversi-c-\\reversi\\reversi_ai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|solutionrelative:reversi_ai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|c:\\users\\he\\documents\\github\\reversi-c-\\reversi\\game_rules.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|solutionrelative:game_rules.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|c:\\users\\he\\documents\\github\\reversi-c-\\reversi\\gamestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|solutionrelative:gamestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|c:\\users\\he\\documents\\github\\reversi-c-\\reversi\\board.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -29,10 +33,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|c:\\users\\he\\documents\\github\\reversi-c-\\reversi\\ui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|solutionrelative:ui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|c:\\users\\he\\documents\\github\\reversi-c-\\reversi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CD3FF900-F534-4BA3-985D-CFF50A0AAE9A}|Reversi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -58,13 +58,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Window.cs",
               "DocumentMoniker": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\Window.cs",
               "RelativeDocumentMoniker": "Window.cs",
               "ToolTip": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\Window.cs",
               "RelativeToolTip": "Window.cs",
-              "ViewState": "AgIAAGEAAAAAAAAAAAAAAHAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACUAAAAAAAAAAAAQwHAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-07T22:45:20.393Z",
               "EditorCaption": ""
@@ -77,46 +77,46 @@
               "RelativeDocumentMoniker": "Settings.cs",
               "ToolTip": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\Settings.cs*",
               "RelativeToolTip": "Settings.cs*",
-              "ViewState": "AgIAAH4AAAAAAAAAAAAAwJwAAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAAJwAAAAAAAAAAAAYwLsAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-07T22:42:10.265Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "UI.cs",
               "DocumentMoniker": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\UI.cs",
               "RelativeDocumentMoniker": "UI.cs",
               "ToolTip": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\UI.cs",
               "RelativeToolTip": "UI.cs",
-              "ViewState": "AgIAAHYAAAAAAAAAAAAQwIwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-07T22:45:26.943Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "Board.cs",
               "DocumentMoniker": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\Board.cs",
               "RelativeDocumentMoniker": "Board.cs",
               "ToolTip": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\Board.cs",
               "RelativeToolTip": "Board.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-07T22:45:34.163Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "GameState.cs",
               "DocumentMoniker": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\GameState.cs",
               "RelativeDocumentMoniker": "GameState.cs",
               "ToolTip": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\GameState.cs",
               "RelativeToolTip": "GameState.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAQwD0AAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD0AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-07T22:45:55.135Z",
               "EditorCaption": ""
@@ -129,27 +129,27 @@
               "RelativeDocumentMoniker": "Game_rules.cs",
               "ToolTip": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\Game_rules.cs",
               "RelativeToolTip": "Game_rules.cs",
-              "ViewState": "AgIAAG8AAAAAAAAAAAAYwA0AAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-07T22:46:05.615Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Reversi_AI.cs",
               "DocumentMoniker": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\Reversi_AI.cs",
               "RelativeDocumentMoniker": "Reversi_AI.cs",
               "ToolTip": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\Reversi_AI.cs",
               "RelativeToolTip": "Reversi_AI.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADgAAAASAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAE0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-07T22:51:22.056Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\He\\Documents\\GitHub\\Reversi-C-\\Reversi\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",

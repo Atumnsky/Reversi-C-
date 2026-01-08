@@ -1,6 +1,4 @@
-﻿using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
-
-namespace Reversi
+﻿namespace Reversi
 {
     public class Settings
     {
@@ -175,18 +173,18 @@ namespace Reversi
                     else if (status == 2)
                     {
                         Weight1 = Weight2 + 10;
-                        Weight2 = Weight3 + 10;
-                        Weight3 = Weight4 + 5;
-                        Weight4 = Weight5 + 5;
+                        Weight2 = Weight3 + 5;
+                        Weight3 = Weight4;
+                        Weight4 = Weight5;
                         Weight5 = 5;
                     }
 
                     else if (status == 3)
                     {
-                        Weight1 = Weight2 + 25;
-                        Weight2 = Weight3 + 20;
-                        Weight3 = Weight4 + 5;
-                        Weight4 = Weight5 + 5;
+                        Weight1 = Weight2 + 15;
+                        Weight2 = Weight3 + 10;
+                        Weight3 = Weight4 + 1;
+                        Weight4 = Weight5 + 1;
                         Weight5 = 5;
                     }
                 }
