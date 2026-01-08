@@ -140,6 +140,7 @@ namespace Reversi
                 return;
             ui.UIPanel.Location = new Point((ClientSize.Width - ui.UIPanel.Width) / 2, Settings.Uheight / 10);
         }
+
         void StartNewGame(object sender, EventArgs e)
         {
             if (game != null)
@@ -154,126 +155,63 @@ namespace Reversi
             if (Settings.VSAI && game.CurrentPlayer == 2)
                 Reversi_AI.AIMove(game, ui);
         }
+
         void ShowHelp(object sender, EventArgs e)
         {
             Process.Start(new ProcessStartInfo { FileName = "https://bitflap.app/vspocket/articles/reversi-rules-complete-guide/", UseShellExecute = true });
         }
+
         void HintON(object sender, EventArgs e)
         {
             Settings.ShowHint = !Settings.ShowHint;
             RedrawBoard();
         }
+
         void VSAIOn(object sender, EventArgs e)
         {
             Settings.VSAI = ui.VSAIOn;
             if (game != null && game.CurrentPlayer == 2)
                 Reversi_AI.AIMove(game, ui);
         }
+
         void ChangeFieldSize(object sender, EventArgs ea)
         {
             if (game != null)
                 return;
             //Parse the number from the Box for FieldSize
-            string text = ui.FieldSizeBox.SelectedItem.ToString();
+            if (ui.FieldSizeBox.SelectedItem == null) return;
+            string text = ui.FieldSizeBox.SelectedItem.ToString()!;
             Settings.cells = int.Parse(text.Split('x')[0]);
         }
+        
         void ChangeColor(object sender, EventArgs e)
         {
-            string text = ui.ColorBox.SelectedItem.ToString();
+            if (ui.ColorBox.SelectedItem == null) return;
+            string text = ui.ColorBox.SelectedItem.ToString()!;
+
+            Settings.ChangeTheme(text);
 
             if (text == "Classic Board")
-            {
-                Settings.Br = 10;
-                Settings.Bg = 70;
-                Settings.Bb = 50;
-
-                Settings.R = 60;
-                Settings.G = 179;
-                Settings.B = 113;
-
-                Settings.White = new SolidBrush(Color.White);
-                Settings.Black = new SolidBrush(Color.Black);
-
-                Settings.Wcircle = new Pen(Color.White, Settings.circleThick);
-                Settings.Bcircle = new Pen(Color.Black, Settings.circleThick);
-
                 ui.HelpButton.ForeColor = Color.White;
-            }
             else if (text == "Red & Blue")
-            {
-                Settings.Br = 200;
-                Settings.Bg = 200;
-                Settings.Bb = 200;
-
-                Settings.R = 140;
-                Settings.G = 140;
-                Settings.B = 140;
-
-                Settings.White = new SolidBrush(Color.Blue);
-                Settings.Black = new SolidBrush(Color.Red);
-
-                Settings.Wcircle = new Pen(Color.Blue, Settings.circleThick);
-                Settings.Bcircle = new Pen(Color.Red, Settings.circleThick);
-
-                Settings.hint = new SolidBrush(Color.FromArgb(180, 180, 180));
                 ui.HelpButton.ForeColor = Color.Blue;
-            }
             else if (text == "Wood")
-            {
-                Settings.Br = 186;
-                Settings.Bg = 140;
-                Settings.Bb = 99;
-
-                Settings.R = 193;
-                Settings.G = 154;
-                Settings.B = 107;
-
-                Settings.White = new SolidBrush(Color.FromArgb(238, 213, 174));
-                Settings.Black = new SolidBrush(Color.FromArgb(76, 43, 32));
-
-                Settings.Wcircle = new Pen(Color.FromArgb(238, 213, 174), Settings.circleThick);
-                Settings.Bcircle = new Pen(Color.FromArgb(76, 43, 32), Settings.circleThick);
-
-                ui.HelpButton.ForeColor = Color.FromArgb(248, 223, 184);
-            }
+                ui.HelpButton.ForeColor = Color.FromArgb(76, 43, 32);
 
             ui.HelpButton.BackColor = Color.FromArgb(Settings.Br, Settings.Bg, Settings.Bb);
             background.BackColor = Color.FromArgb(Settings.Br, Settings.Bg, Settings.Bb);
             label.BackColor = Color.FromArgb(Settings.R, Settings.G, Settings.B);
+
             RedrawBoard();
         }
 
         void ChangeDifficulty(object sender, EventArgs e)
         {
-            string text = ui.DifficultyBox.SelectedItem.ToString();
-
-            if (text == "Easy")
-            {
-                Settings.Weight1 = Settings.Weight2 + 2;
-                Settings.Weight2 = Settings.Weight3 + 1;
-                Settings.Weight3 = Settings.Weight4 + 1;
-                Settings.Weight4 = Settings.Weight5 + 1;
-                Settings.Weight5 = 5;
-            }
-
-            else if (text == "Medium")
-            {
-                Settings.Weight1 = Settings.Weight2 + 120;
-                Settings.Weight2 = Settings.Weight3 + 70;
-                Settings.Weight3 = Settings.Weight4 + 30;
-                Settings.Weight4 = Settings.Weight5 + 15;
-                Settings.Weight5 = 3;
-            }
-
-            else if (text == "Hard")
-            {
-                Settings.Weight1 = Settings.Weight2 + 200;
-                Settings.Weight2 = Settings.Weight3 + 150;
-                Settings.Weight3 = Settings.Weight4 + 40;
-                Settings.Weight4 = Settings.Weight5 + 20;
-                Settings.Weight5 = 1;
-            }
+            if (ui.DifficultyBox.SelectedItem == null) return;
+            string text = ui.DifficultyBox.SelectedItem.ToString()!;
+            Settings.ChangeLevel(text);
         }
+
         void BoardClicked(object sender, MouseEventArgs m)
         {
             if (game == null) return;
@@ -321,6 +259,7 @@ namespace Reversi
             }
 
         }
+
         public static void CheckGameEnd()
         {
             if (game == null)
@@ -337,7 +276,8 @@ namespace Reversi
         {
             var scores = game.CountPoints();
 
-            string text = ui.ColorBox.SelectedItem.ToString();
+            if (ui.ColorBox.SelectedItem == null) ui.ColorBox.SelectedItem = "Classic Board";
+            string text = ui.ColorBox.SelectedItem.ToString()!;
             string message;
             string w = "White"; string b = "Black";
 
@@ -365,6 +305,7 @@ namespace Reversi
             await Task.Delay(100);
             game = null;
         }
+
         public static void RedrawBoard()
         {
             if (game == null)

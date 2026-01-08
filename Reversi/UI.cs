@@ -53,6 +53,7 @@
             DifficultyBox = new ComboBox();
             DifficultyBox.Location = new Point(NewGameButton.Location.X + NewGameButton.Width + space, VSAIButton.Height + 1);
             DifficultyBox.Font = font2;
+            DifficultyBox.DropDownStyle = ComboBoxStyle.DropDownList;
 
             DifficultyBox.Items.Add("Easy");
             DifficultyBox.Items.Add("Medium");
@@ -81,6 +82,7 @@
             FieldSizeBox = new ComboBox();
             FieldSizeBox.Location = new Point(HintButton.Location.X + HintButton.Width + space, 0);
             FieldSizeBox.Font = font2;
+            FieldSizeBox.DropDownStyle = ComboBoxStyle.DropDownList;
 
             FieldSizeBox.Items.Add("4x4");
             FieldSizeBox.Items.Add("6x6");
@@ -92,6 +94,7 @@
             ColorBox = new ComboBox();
             ColorBox.Location = new Point(FieldSizeBox.Location.X + FieldSizeBox.Width + space, 0);
             ColorBox.Font = font2;
+            ColorBox.DropDownStyle = ComboBoxStyle.DropDownList;
 
             ColorBox.Items.Add("Classic Board");
             ColorBox.Items.Add("Red & Blue");
