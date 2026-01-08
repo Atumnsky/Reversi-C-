@@ -27,10 +27,10 @@ namespace Reversi
             Controls.Add(ui.UIPanel);
             Controls.Add(ui.PPanel);
 
+            //initialize selections
             ui.FieldSizeBox.SelectedItem = "6x6";
             ui.ColorBox.SelectedItem = "Classic Board";
             ui.DifficultyBox.SelectedItem = "Easy";
-
 
             ui.NewGameClicked += StartNewGame;
             ui.FieldSizeChanged += ChangeFieldSize;
@@ -43,18 +43,15 @@ namespace Reversi
 
             CenterUI();
 
-            labelLocation = new Point((Settings.Wwidth / 2) - ((Settings.Wheight - Settings.Uheight) / 2), Settings.Uheight - 20);
-
             // Reversi board
             label = new Label();
+            labelLocation = new Point((Settings.Wwidth / 2) - ((Settings.Wheight - Settings.Uheight) / 2), Settings.Uheight - 20);
             label.Location = labelLocation;
             label.Size = new Size(Settings.Wheight - Settings.Uheight, Settings.Wheight - Settings.Uheight);
             label.BackColor = Color.FromArgb(Settings.R, Settings.G, Settings.B);
             Controls.Add(label);
             label.Image = Board.Rboard(label.ClientSize, null);
-
             label.MouseClick += BoardClicked;
-
 
             // Window background
             background = new Label();
@@ -92,6 +89,7 @@ namespace Reversi
             g.FillEllipse(Settings.White, leftX, centerY, r, r);
             g.FillEllipse(Settings.Black, rightX, centerY, r, r);
 
+            // Draw the points
             int WhiteScore = 0;
             int BlackScore = 0;
 
@@ -125,7 +123,11 @@ namespace Reversi
                     g.DrawEllipse(Settings.Wcircle, leftX - bigger / 2, centerY - bigger / 2, R, R);
                 else if (game.CurrentPlayer == 2)
                     g.DrawEllipse(Settings.Bcircle, rightX - bigger / 2, centerY - bigger / 2, R, R);
+
+               Settings.ChangeLevel(ui.DifficultyBox.SelectedItem.ToString(), game);
             }
+
+            
         }
 
         void DrawP(object s, PaintEventArgs pea)
@@ -209,7 +211,7 @@ namespace Reversi
         {
             if (ui.DifficultyBox.SelectedItem == null) return;
             string text = ui.DifficultyBox.SelectedItem.ToString()!;
-            Settings.ChangeLevel(text);
+            Settings.ChangeLevel(text, game);
         }
 
         void BoardClicked(object sender, MouseEventArgs m)

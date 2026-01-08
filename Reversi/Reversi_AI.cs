@@ -50,10 +50,8 @@
             if (totalWeight == 0)
                 return;
 
-
             Random rnd = new Random();
             int Move = rnd.Next(totalWeight);
-
 
             //AI play
             int i = 0;

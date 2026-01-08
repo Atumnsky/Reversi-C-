@@ -41,6 +41,7 @@ namespace Reversi
         public static Brush White = new SolidBrush(Color.White);
         public static Brush Black = new SolidBrush(Color.Black);
 
+        //the circle that shows which player turn it is
         public static Pen Wcircle = new Pen(Color.White, circleThick);
         public static Pen Bcircle = new Pen(Color.Black, circleThick);
 
@@ -111,33 +112,84 @@ namespace Reversi
             }
         }
 
-        public static void ChangeLevel(string text)
+        public static void ChangeLevel(string text, GameState game)
         {
-            if (text == "Easy")
+            int status = 1; //1 = Early Game | 2 = Mid Game | 3 = Late Game
+            if (game != null)
             {
-                Weight1 = Weight2 + 2;
-                Weight2 = Weight3 + 1;
-                Weight3 = Weight4 + 1;
-                Weight4 = Weight5 + 1;
-                Weight5 = 5;
-            }
+                var scores = game.CountPoints();
+                int totalPieces = scores.WhiteP + scores.BlackP;
 
-            else if (text == "Medium")
-            {
-                Weight1 = Weight2 + 120;
-                Weight2 = Weight3 + 70;
-                Weight3 = Weight4 + 30;
-                Weight4 = Weight5 + 15;
-                Weight5 = 3;
-            }
 
-            else if (text == "Hard")
-            {
-                Weight1 = Weight2 + 200;
-                Weight2 = Weight3 + 150;
-                Weight3 = Weight4 + 40;
-                Weight4 = Weight5 + 20;
-                Weight5 = 1;
+                int maxCells = game.Size * game.Size;
+                int emptyCells = maxCells - totalPieces;
+
+                if (emptyCells > maxCells * 0.66)
+                    status = 1;
+                else if (emptyCells > maxCells * 0.33)
+                    status = 2;
+                else 
+                    status = 3;
+
+                if (text == "Easy")
+                {
+                    Weight1 = Weight2 + 2;
+                    Weight2 = Weight3 + 1;
+                    Weight3 = Weight4 + 1;
+                    Weight4 = Weight5 + 1;
+                    Weight5 = 5;
+                }
+
+                else if (text == "Medium")
+                {
+                    if (status == 1)
+                    {
+                        Weight1 = 5;
+                        Weight2 = 5;
+                        Weight3 = 5;
+                        Weight4 = 5;
+                        Weight5 = 5;
+                    }
+
+                    else if (status == 2)
+                    {
+                        Weight1 = Weight2 + 15;
+                        Weight2 = Weight3 + 15;
+                        Weight3 = Weight4 + 5;
+                        Weight4 = Weight5 + 5;
+                        Weight5 = 5;
+                    }
+                }
+
+                else if (text == "Hard")
+                {
+                    if (status == 1)
+                    {
+                        Weight1 = 5;
+                        Weight2 = 5;
+                        Weight3 = 5;
+                        Weight4 = 5;
+                        Weight5 = 5;
+                    }
+
+                    else if (status == 2)
+                    {
+                        Weight1 = Weight2 + 10;
+                        Weight2 = Weight3 + 10;
+                        Weight3 = Weight4 + 5;
+                        Weight4 = Weight5 + 5;
+                        Weight5 = 5;
+                    }
+
+                    else if (status == 3)
+                    {
+                        Weight1 = Weight2 + 25;
+                        Weight2 = Weight3 + 20;
+                        Weight3 = Weight4 + 5;
+                        Weight4 = Weight5 + 5;
+                        Weight5 = 5;
+                    }
+                }
             }
         }
     }

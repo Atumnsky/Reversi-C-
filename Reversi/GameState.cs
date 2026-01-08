@@ -55,8 +55,9 @@
                         BlackP++;
                 }
             }
-
+            
             return (WhiteP, BlackP);
+            
         }
         
     }

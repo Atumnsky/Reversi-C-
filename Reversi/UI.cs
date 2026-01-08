@@ -47,7 +47,6 @@
             VSAIButton.Font = font1;
             VSAIButton.Size = NewGameButton.Size;
             VSAIButton.Location = new Point(NewGameButton.Location.X + NewGameButton.Width + space, 0);
-
             VSAIButton.Click += ONAIClicked;
 
             DifficultyBox = new ComboBox();
@@ -66,7 +65,6 @@
             HintButton.Font = font1;
             HintButton.Size = NewGameButton.Size;
             HintButton.Location = new Point(VSAIButton.Location.X + VSAIButton.Width + space, 0);
-
             HintButton.Click += OnHintClicked;
 
             HelpButton = new Button();
@@ -76,7 +74,6 @@
             HelpButton.FlatStyle = FlatStyle.Flat;
             HelpButton.FlatAppearance.BorderSize = 0;
             HelpButton.Location = new Point(PPanel.Size.Width - 110, PPanel.Size.Height - 40);
-
             HelpButton.Click += OnHelpClicked;
 
             FieldSizeBox = new ComboBox();
