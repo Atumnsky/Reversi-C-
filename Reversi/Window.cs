@@ -350,7 +350,7 @@ namespace Reversi
             if (ui != null)
                 ui.PPanel.Invalidate();
             CenterUI();
-            base.OnResize(e);
+            //base.OnResize(e);
         }
     }
 }
